@@ -22,7 +22,10 @@ sequelize
     console.log(" Error connecting to database:", error);
   });
 
-app.get("/health", (_, res) => res.json({ ok: true }));
+// Default test route
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Chat Backend API is running!" });
+});
 // Routes
 app.use("/api/auth", authRoutes);
 
