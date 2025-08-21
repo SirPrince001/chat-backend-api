@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import Room from "../models/Room";
 import UserRoom from "../models/UserRoom";
-import { User } from "../models"; // import associations
+import { User } from "../models"; 
+import RoomMember from "../models/RoomMember";
+
+
+
 // Extend Express Request to include user
 interface AuthRequest extends Request {
   user?: { id: string; email: string };
@@ -119,5 +123,34 @@ export const getUserRooms = async (req: AuthRequest, res: Response) => {
   } catch (err) {
     console.error("Get user rooms error:", err);
     res.status(500).json({ message: "Server error", error: err });
+  }
+};
+
+
+//get room members
+export const getRoomMembers = async (req: Request, res: Response) => {
+  const { roomId } = req.params;
+
+  try {
+    const room = await Room.findByPk(roomId);
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    const members = await User.findAll({
+      include: [
+        {
+          model: RoomMember,
+          where: { roomId },
+          attributes: [],
+        },
+      ],
+      attributes: ["id", "fullName", "email", "isOnline", "lastSeen"],
+    });
+
+    return res.json({ roomId, members });
+  } catch (err) {
+    console.error("❌ Error fetching room members:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 };

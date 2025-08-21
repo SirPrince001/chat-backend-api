@@ -3,6 +3,7 @@ import cors from "cors";
 import sequelize from "./database/db";
 import authRoutes from "./routes/authRoute";
 import roomRoutes from "./routes/roomRoutes";
+
 import "./models/index";
 
 const app = express();
@@ -25,6 +26,11 @@ app.get("/health", (_, res) => res.json({ ok: true }));
 // Routes
 app.use("/api/auth", authRoutes);
 
+
 app.use("/api/rooms", roomRoutes);
+
+
+
+
 
 export default app;
