@@ -163,13 +163,16 @@ chatNamespace.on("connection", (socket) => {
   });
 });
 
+// Use Render's dynamic port
+const PORT = process.env.PORT || 4000;
+
 // Connect to DB first, then start server
 (async () => {
   try {
     await sequelize.authenticate();
     console.log("✅ Database connected successfully");
 
-    server.listen(4000, () => {
+    server.listen(PORT, () => {
       console.log("🚀 Server running at http://localhost:4000");
       console.log(
         "📡 Chat namespace available at ws://localhost:4000/chat (path=/socket.io)"
